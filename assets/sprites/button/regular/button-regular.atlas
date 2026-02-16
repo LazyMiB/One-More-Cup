@@ -1,0 +1,10 @@
+images {
+  image: "/assets/sprites/button/regular/regular_button-active.png"
+}
+images {
+  image: "/assets/sprites/button/regular/regular_button-hover.png"
+}
+images {
+  image: "/assets/sprites/button/regular/regular_button-normal.png"
+}
+extrude_borders: 2

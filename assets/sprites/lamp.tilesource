@@ -1,0 +1,39 @@
+image: "/assets/sprites/lamp.png"
+tile_width: 64
+tile_height: 64
+animations {
+  id: "backward"
+  start_tile: 2
+  end_tile: 5
+  playback: PLAYBACK_LOOP_BACKWARD
+  fps: 1
+}
+animations {
+  id: "forward"
+  start_tile: 2
+  end_tile: 5
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 1
+}
+animations {
+  id: "full"
+  start_tile: 1
+  end_tile: 5
+  playback: PLAYBACK_LOOP_PINGPONG
+  fps: 1
+}
+animations {
+  id: "off"
+  start_tile: 1
+  end_tile: 1
+  playback: PLAYBACK_NONE
+  fps: 0
+}
+animations {
+  id: "pong"
+  start_tile: 2
+  end_tile: 5
+  playback: PLAYBACK_LOOP_PINGPONG
+  fps: 1
+}
+extrude_borders: 2

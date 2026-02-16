@@ -1,0 +1,282 @@
+local button = require("starter-pack/ui/button")
+local anim = require("starter-pack/ui/anim")
+
+local OPACITY = 0.7
+local OPACITY_POPUP = 0.9
+local BUCKS_STEP = 1
+local COFFEE_TIMER = 5
+local CUPS_TIMER = 6
+local WORK_TIMER = 0.1
+local WORK_STEP = 0.01
+local WORK_CLICK_STEP = 0.01
+local WORK_DECREASE_STEP = 0.0001
+local WORK_CLICK_STEP_MIN = 0.0025
+local THUMBS_RANGE = 0
+local LOSE_RANGE = -0.99
+local WIN_RANGE = 1.0
+local DEFAULT_CUPS = 2
+local MAX_CUPS = 5
+
+local PRESSED = hash("pressed")
+local RESET = hash("reset")
+local POPUP_CREDITS = "credits"
+local POPUP_WIN= "win"
+local POPUP_LOSE = "lose"
+
+local function show_credits_btn(self)
+	gui.set_enabled(gui.get_node("credits/button"), true)
+	gui.set_enabled(gui.get_node("credits/text"), true)
+	anim.animate("credits/button", anim.MEDIUM_D)
+	anim.animate("credits/text", anim.FAST_D)
+end
+
+local function hide_credits_btn(self)
+	gui.set_enabled(gui.get_node("credits/button"), false)
+	gui.set_enabled(gui.get_node("credits/text"), false)
+end
+
+local function show_popup(self, mode)
+	gui.set_enabled(gui.get_node("popup"), true)
+	anim.animate("popup", anim.FAST_D)
+	if mode == POPUP_CREDITS then
+		gui.play_flipbook(gui.get_node("popup"), "popup-blue")
+		gui.set_enabled(gui.get_node("credits-text"), true)
+		anim.animate("credits-text", anim.FAST_D)
+	elseif mode == POPUP_WIN then
+		gui.play_flipbook(gui.get_node("popup"), "popup-green")
+		gui.set_enabled(gui.get_node("win-text"), true)
+		anim.animate("win-text", anim.FAST_D)
+	elseif mode == POPUP_LOSE then
+		gui.play_flipbook(gui.get_node("popup"), "popup-red")
+		gui.set_enabled(gui.get_node("lose-text"), true)
+		anim.animate("lose-text", anim.FAST_D)
+	end
+end
+
+local function hide_popup(self)
+	gui.set_enabled(gui.get_node("popup"), false)
+	gui.set_enabled(gui.get_node("credits-text"), false)
+	gui.set_enabled(gui.get_node("win-text"), false)
+	gui.set_enabled(gui.get_node("lose-text"), false)
+end
+
+local function reset_counters(self)
+	self.income = 0
+	self.clicks = 0
+	self.drank = 0
+	self.round = 0
+	gui.set_text(gui.get_node("drank"), "Drank: " .. tostring(self.drank))
+	gui.set_text(gui.get_node("clicks"), "Clicks: " .. tostring(self.clicks))
+	gui.set_text(gui.get_node("income"), "$" .. tostring(self.income))
+	gui.set_text(gui.get_node("round"), "Round: " .. tostring(self.round))
+end
+
+local function pause_game(self)
+	self.paused = true
+	self.pause_btn:set_textures("button-play-normal", "button-play-hover", "button-play-active")
+	self.pause_btn:update()
+	show_credits_btn(self)
+end
+
+local function resume_game(self)
+	self.paused = false
+	self.pause_btn:set_textures("button-pause-normal", "button-pause-hover", "button-pause-active")
+	self.pause_btn:update()
+	hide_credits_btn(self)
+	hide_popup(self)
+	if self.reset_await then
+		self.reset_await = false
+		reset_counters(self)
+	end
+end
+
+local function lose(self)
+	self.reset_await = true
+	self.coffee_timer = 0
+	self.click_step = WORK_CLICK_STEP
+	self.range = THUMBS_RANGE
+	self.work_timer = WORK_TIMER
+	self.cups_timer = CUPS_TIMER
+	self.cups = DEFAULT_CUPS
+	gui.set_enabled(gui.get_node("coffee-bar"), false)
+	self.coffee_btn:set_enabled(true)
+	msg.post("/cupsbar#cupsbar", "set_level", { level = self.cups })
+	msg.post("/thumb#thumb_script", "set_range", { range = self.range })
+	sound.play("/sounds#laugh")
+	pause_game(self)
+	show_popup(self, POPUP_LOSE)
+end
+
+local function win(self)
+	self.coffee_timer = 0
+	self.round = self.round + 1
+	self.range = THUMBS_RANGE
+	self.work_timer = WORK_TIMER
+	self.cups_timer = CUPS_TIMER
+	self.cups = DEFAULT_CUPS
+	self.click_step = self.click_step - WORK_DECREASE_STEP
+	if self.click_step < WORK_CLICK_STEP_MIN then
+		self.click_step = WORK_CLICK_STEP_MIN
+	end
+	gui.set_enabled(gui.get_node("coffee-bar"), false)
+	self.coffee_btn:set_enabled(true)
+	gui.set_text(gui.get_node("round"), "Round: " .. tostring(self.round))
+	msg.post("/cupsbar#cupsbar", "set_level", { level = self.cups })
+	msg.post("/thumb#thumb_script", "set_range", { range = self.range })
+	sound.play("/sounds#lightning")
+	pause_game(self)
+	show_popup(self, POPUP_WIN)
+end
+
+function init(self)
+	self.income = 0
+	self.clicks = 0
+	self.drank = 0
+	self.round = 0
+	self.coffee_timer = 0
+	self.click_step = WORK_CLICK_STEP
+	self.range = THUMBS_RANGE
+	self.work_timer = WORK_TIMER
+	self.cups_timer = CUPS_TIMER
+	self.cups = DEFAULT_CUPS
+	self.paused = true
+	self.reset_await = false
+	gui.set_color(gui.get_node("pause/button"), vmath.vector4(1, 1, 1, OPACITY))
+	gui.set_color(gui.get_node("coffee/button"), vmath.vector4(1, 1, 1, OPACITY))
+	gui.set_color(gui.get_node("work/button"), vmath.vector4(1, 1, 1, OPACITY))
+	gui.set_color(gui.get_node("popup"), vmath.vector4(1, 1, 1, OPACITY_POPUP))
+	anim.animate("pause/button", anim.MEDIUM_D)
+	anim.animate("coffee/button", anim.FAST_D)
+	anim.animate("work/button", anim.FAST_D)
+	anim.animate("credits/button", anim.MEDIUM_D)
+	anim.animate("credits/text", anim.FAST_D)
+	anim.animate("drank", anim.DEFAULT_D)
+	anim.animate("round", anim.DEFAULT_D)
+	anim.animate("clicks", anim.DEFAULT_D)
+	anim.animate("income", anim.DEFAULT_D)
+	self.pause_btn = button.new("pause", true)
+	self.coffee_btn = button.new("coffee", true)
+	self.work_btn = button.new("work", true)
+	self.credits_btn = button.new("credits", true)
+	self.pause_btn:set_textures("button-play-normal", "button-play-hover", "button-play-active")
+	self.credits_btn:set_textures("regular_button-normal", "regular_button-hover", "regular_button-active")
+	self.coffee_btn:set_textures(
+		"button-coffee-normal",
+		"button-coffee-hover",
+		"button-coffee-active",
+		nil, nil, nil, nil, nil, nil,
+		"button-coffee-disabled"
+	)
+	self.work_btn:set_textures("button-work-normal", "button-work-hover", "button-work-active")
+	msg.post("/cupsbar#cupsbar", "set_level", { level = self.cups })
+	msg.post(".", "acquire_input_focus")
+end
+
+function update(self, dt)
+	if self.paused then return end
+	if self.range <= LOSE_RANGE then
+		lose(self)
+	elseif self.range >= WIN_RANGE then
+		win(self)
+	end
+	if self.coffee_timer > 0 then
+		self.coffee_timer = self.coffee_timer - dt
+		local stage = 1 / COFFEE_TIMER * self.coffee_timer
+		local node = gui.get_node("coffee-bar")
+		if stage < 0.75 and stage > 0.5 then
+			gui.play_flipbook(node, "button-bar-75")
+		elseif stage < 0.5 and stage > 0.25 then
+			gui.play_flipbook(node, "button-bar-50")
+		elseif stage < 0.25 and stage > 0 then
+			gui.play_flipbook(node, "button-bar-25")
+		elseif self.coffee_timer <= 0 then
+			self.coffee_timer = 0
+			gui.set_enabled(node, false)
+			self.coffee_btn:set_enabled(true)
+		end
+	end
+	if self.cups_timer > 0 and self.cups > 0 then
+		self.cups_timer = self.cups_timer - dt
+		if self.cups_timer <= 0 then
+			self.cups_timer = 0
+			self.cups = self.cups - 1
+			msg.post("/cupsbar#cupsbar", "set_level", { level = self.cups })
+			if self.cups > 0 then
+				self.cups_timer = CUPS_TIMER
+			end
+		end
+	end
+	if self.work_timer > 0 then
+		self.work_timer = self.work_timer - dt
+		if self.work_timer <= 0 then
+			self.work_timer = WORK_TIMER
+			self.range = self.range - WORK_STEP
+			if self.range < -1 then
+				self.range = -1
+			end
+		end
+		msg.post("/thumb#thumb_script", "set_range", { range = self.range })
+	end
+end
+
+function on_input(self, action_id, action)
+	self.pause_btn:input(action_id, action, function(status, animation)
+		if status ~= PRESSED then return end
+		sound.play("/sounds#click")
+		if self.paused then
+			resume_game(self)
+		else
+			pause_game(self)
+		end
+	end)
+	self.coffee_btn:input(action_id, action, function(status, animation)
+		if status ~= PRESSED or self.cups == MAX_CUPS or self.paused then return end
+		sound.play("/sounds#drink")
+		particlefx.play("/go#coffee")
+		self.drank = self.drank + 1
+		gui.set_text(gui.get_node("drank"), "Drank: " .. tostring(self.drank))
+		local bar = gui.get_node("coffee-bar")
+		gui.play_flipbook(bar, "button-bar-100")
+		gui.set_enabled(bar, true)
+		self.coffee_btn:set_enabled(false)
+		self.coffee_timer = COFFEE_TIMER
+		self.cups_timer = CUPS_TIMER
+		self.cups = self.cups + 1
+		msg.post("/cupsbar#cupsbar", "set_level", { level = self.cups })
+	end)
+	self.work_btn:input(action_id, action, function(status, animation)
+		if status ~= PRESSED or self.cups <= 0 or self.paused then return end
+		sound.play("/sounds#work")
+		particlefx.play("/go#work")
+		self.clicks = self.clicks + 1
+		gui.set_text(gui.get_node("clicks"), "Clicks: " .. tostring(self.clicks))
+		self.income = self.income + BUCKS_STEP / (1 / self.cups)
+		gui.set_text(gui.get_node("income"), "$" .. tostring(self.income))
+		self.range = self.range + self.click_step / (1 / self.cups)
+		if self.range > 1 then
+			self.range = 1
+		end
+		msg.post("/thumb#thumb_script", "set_range", { range = self.range })
+	end)
+	self.credits_btn:input(action_id, action, function(status, animation)
+		if status ~= PRESSED then return end
+		sound.play("/sounds#credits")
+		if gui.is_enabled(gui.get_node("credits-text")) then
+			hide_popup(self)
+		else
+			hide_popup(self)
+			show_popup(self, POPUP_CREDITS)
+		end
+	end)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == RESET then
+		self.income = 0
+		self.clicks = 0
+		self.drank = 0
+		gui.set_text(gui.get_node("income"), "$" .. tostring(self.income))
+		gui.set_text(gui.get_node("clicks"), "Clicks: " .. tostring(self.clicks))
+		gui.set_text(gui.get_node("drank"), "Drank: " .. tostring(self.drank))
+	end
+end

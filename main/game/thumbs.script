@@ -1,0 +1,27 @@
+local SET_RANGE = hash("set_range")
+local RESET_RANGE = hash("reset_range")
+
+go.property("limit", 170)
+go.property("default_range", 0)
+
+local function set_range(self, range)
+	local pos = go.get_position()
+	if range == 0 then
+		pos.x = 0
+	else
+		pos.x = self.limit * range
+	end
+	go.set_position(pos)
+end
+
+function init(self)
+	set_range(self, self.default_range)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == SET_RANGE then
+		set_range(self, message.range)
+	elseif message_id == RESET_RANGE then
+		set_range(self, self.default_range)
+	end
+end

@@ -1,0 +1,10 @@
+images {
+  image: "/assets/sprites/popup/popup-blue.png"
+}
+images {
+  image: "/assets/sprites/popup/popup-red.png"
+}
+images {
+  image: "/assets/sprites/popup/popup-green.png"
+}
+extrude_borders: 2

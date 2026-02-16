@@ -1,0 +1,18 @@
+image: "/assets/sprites/cup.png"
+tile_width: 64
+tile_height: 64
+animations {
+  id: "empty"
+  start_tile: 1
+  end_tile: 1
+  playback: PLAYBACK_NONE
+  fps: 0
+}
+animations {
+  id: "full"
+  start_tile: 2
+  end_tile: 4
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 3
+}
+extrude_borders: 2

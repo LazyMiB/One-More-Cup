@@ -1,0 +1,7 @@
+images {
+  image: "/assets/sprites/bigcup.png"
+}
+images {
+  image: "/assets/sprites/pot.png"
+}
+extrude_borders: 2

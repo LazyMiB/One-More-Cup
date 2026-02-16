@@ -1,0 +1,13 @@
+images {
+  image: "/assets/sprites/button/button-bar-25.png"
+}
+images {
+  image: "/assets/sprites/button/button-bar-50.png"
+}
+images {
+  image: "/assets/sprites/button/button-bar-75.png"
+}
+images {
+  image: "/assets/sprites/button/button-bar-100.png"
+}
+extrude_borders: 2

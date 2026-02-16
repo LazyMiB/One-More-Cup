@@ -1,0 +1,43 @@
+images {
+  image: "/assets/sprites/button/button-play-hover.png"
+}
+images {
+  image: "/assets/sprites/button/button-work-hover.png"
+}
+images {
+  image: "/assets/sprites/button/button-coffee-active.png"
+}
+images {
+  image: "/assets/sprites/button/button-coffee-disabled.png"
+}
+images {
+  image: "/assets/sprites/button/button-coffee-hover.png"
+}
+images {
+  image: "/assets/sprites/button/button-coffee-normal.png"
+}
+images {
+  image: "/assets/sprites/button/button-pause-active.png"
+}
+images {
+  image: "/assets/sprites/button/button-pause-hover.png"
+}
+images {
+  image: "/assets/sprites/button/button-pause-normal.png"
+}
+images {
+  image: "/assets/sprites/button/button-play-active.png"
+}
+images {
+  image: "/assets/sprites/button/button-play-normal.png"
+}
+images {
+  image: "/assets/sprites/button/button-work-active.png"
+}
+images {
+  image: "/assets/sprites/button/button-work-disabled.png"
+}
+images {
+  image: "/assets/sprites/button/button-work-normal.png"
+}
+extrude_borders: 2

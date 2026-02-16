@@ -1,0 +1,46 @@
+[bootstrap]
+main_collection = /main/main.collectionc
+
+[script]
+shared_state = 1
+
+[display]
+width = 960
+height = 640
+high_dpi = 1
+
+[android]
+input_method = HiddenInputField
+app_icon_72x72 = /assets/sprites/button/button-coffee-active.png
+package = com.lazymib.onemorecup
+
+[physics]
+gravity_y = -1000.0
+scale = 0.01
+
+[html5]
+scale_mode = stretch
+show_fullscreen_button = 0
+show_made_with_defold = 0
+cssfile = /builtins/manifests/web/dark_theme.css
+
+[project]
+title = One More Cup
+developer = LazyMiB
+dependencies#0 = https://github.com/britzl/defold-orthographic/archive/refs/tags/3.4.1.zip
+dependencies#1 = https://github.com/Rich-Defolding/Starter-Pack/archive/refs/tags/0.1.zip
+
+[native_extension]
+app_manifest = /app.appmanifest
+
+[ios]
+app_icon_76x76 = /assets/sprites/button/button-coffee-active.png
+bundle_identifier = lazymib.onemorecup
+
+[osx]
+bundle_identifier = lazymib.onemorecup
+app_icon = /assets/button-coffee-active.icns
+
+[windows]
+app_icon = /assets/button-coffee-active.ico
+

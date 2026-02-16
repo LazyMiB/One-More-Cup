@@ -1,0 +1,7 @@
+images {
+  image: "/assets/sprites/particle/particle-coffee.png"
+}
+images {
+  image: "/assets/sprites/particle/particle-work.png"
+}
+extrude_borders: 2

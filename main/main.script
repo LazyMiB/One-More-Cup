@@ -1,0 +1,8 @@
+go.property("label_opacity", 0.8)
+
+function init(self)
+	sound.play("/sounds#ambient")
+	sound.play("/sounds#rain")
+	sound.play("/sounds#bg")
+	go.set("/go#label", "tint.w", self.label_opacity)
+end

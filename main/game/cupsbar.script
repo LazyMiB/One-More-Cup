@@ -1,0 +1,61 @@
+local CUP_1 = "/cupsbar#cup1"
+local CUP_2 = "/cupsbar#cup2"
+local CUP_3 = "/cupsbar#cup3"
+local CUP_4 = "/cupsbar#cup4"
+local CUP_5 = "/cupsbar#cup5"
+local SET_LEVEL = hash("set_level")
+local SET_DEFAULT = hash("set_default")
+
+go.property("default_lvl", 2)
+
+local function set_level(lvl)
+	if lvl == 0 then
+		sprite.play_flipbook(CUP_1, "empty")
+		sprite.play_flipbook(CUP_2, "empty")
+		sprite.play_flipbook(CUP_3, "empty")
+		sprite.play_flipbook(CUP_4, "empty")
+		sprite.play_flipbook(CUP_5, "empty")
+	elseif lvl == 1 then
+		sprite.play_flipbook(CUP_1, "full")
+		sprite.play_flipbook(CUP_2, "empty")
+		sprite.play_flipbook(CUP_3, "empty")
+		sprite.play_flipbook(CUP_4, "empty")
+		sprite.play_flipbook(CUP_5, "empty")
+	elseif lvl == 2 then
+		sprite.play_flipbook(CUP_1, "full")
+		sprite.play_flipbook(CUP_2, "full")
+		sprite.play_flipbook(CUP_3, "empty")
+		sprite.play_flipbook(CUP_4, "empty")
+		sprite.play_flipbook(CUP_5, "empty")
+	elseif lvl == 3 then
+		sprite.play_flipbook(CUP_1, "full")
+		sprite.play_flipbook(CUP_2, "full")
+		sprite.play_flipbook(CUP_3, "full")
+		sprite.play_flipbook(CUP_4, "empty")
+		sprite.play_flipbook(CUP_5, "empty")
+	elseif lvl == 4 then
+		sprite.play_flipbook(CUP_1, "full")
+		sprite.play_flipbook(CUP_2, "full")
+		sprite.play_flipbook(CUP_3, "full")
+		sprite.play_flipbook(CUP_4, "full")
+		sprite.play_flipbook(CUP_5, "empty")
+	elseif lvl == 5 then
+		sprite.play_flipbook(CUP_1, "full")
+		sprite.play_flipbook(CUP_2, "full")
+		sprite.play_flipbook(CUP_3, "full")
+		sprite.play_flipbook(CUP_4, "full")
+		sprite.play_flipbook(CUP_5, "full")
+	end
+end
+
+function init(self)
+	set_level(self.default_lvl)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == SET_LEVEL then
+		set_level(message.level)
+	elseif message_id == SET_DEFAULT then
+		set_level(self.default_lvl)
+	end
+end

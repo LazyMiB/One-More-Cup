@@ -1,0 +1,323 @@
+script: "/main/hud/hud.gui_script"
+fonts {
+  name: "TopHud"
+  font: "/assets/font/TopHud.font"
+}
+fonts {
+  name: "Text"
+  font: "/assets/font/Text.font"
+}
+fonts {
+  name: "Credits"
+  font: "/assets/font/Credits.font"
+}
+textures {
+  name: "bar"
+  texture: "/assets/sprites/button/bar.atlas"
+}
+textures {
+  name: "popup"
+  texture: "/assets/sprites/popup/popup.atlas"
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_BOX
+  id: "root"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+  visible: false
+}
+nodes {
+  position {
+    x: 99.0
+    y: 95.0
+  }
+  type: TYPE_TEMPLATE
+  id: "coffee"
+  parent: "root"
+  inherit_alpha: true
+  template: "/main/hud/button.gui"
+}
+nodes {
+  type: TYPE_BOX
+  id: "coffee/root"
+  parent: "coffee"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_BOX
+  id: "coffee/button"
+  parent: "coffee/root"
+  template_node_child: true
+}
+nodes {
+  position {
+    x: 861.0
+    y: 95.0
+  }
+  type: TYPE_TEMPLATE
+  id: "work"
+  parent: "root"
+  inherit_alpha: true
+  template: "/main/hud/button.gui"
+}
+nodes {
+  type: TYPE_BOX
+  id: "work/root"
+  parent: "work"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_BOX
+  texture: "button/button-work-normal"
+  id: "work/button"
+  parent: "work/root"
+  overridden_fields: 9
+  template_node_child: true
+}
+nodes {
+  position {
+    x: 460.0
+    y: 558.0
+  }
+  type: TYPE_TEMPLATE
+  id: "pause"
+  parent: "root"
+  inherit_alpha: true
+  template: "/main/hud/button.gui"
+}
+nodes {
+  type: TYPE_BOX
+  id: "pause/root"
+  parent: "pause"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_BOX
+  texture: "button/button-play-normal"
+  id: "pause/button"
+  parent: "pause/root"
+  overridden_fields: 9
+  template_node_child: true
+}
+nodes {
+  position {
+    x: 172.0
+    y: 46.0
+  }
+  size {
+    x: 200.0
+    y: 30.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "Drank: 0"
+  font: "TopHud"
+  id: "drank"
+  pivot: PIVOT_W
+  parent: "root"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 787.0
+    y: 46.0
+  }
+  size {
+    x: 200.0
+    y: 30.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "Clicks: 0"
+  font: "TopHud"
+  id: "clicks"
+  pivot: PIVOT_E
+  parent: "root"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 560.0
+    y: 544.0
+  }
+  size {
+    x: 180.0
+    y: 30.0
+  }
+  color {
+    x: 0.9019608
+    y: 0.9019608
+    z: 0.9019608
+  }
+  type: TYPE_TEXT
+  text: "$0"
+  font: "TopHud"
+  id: "income"
+  pivot: PIVOT_W
+  parent: "root"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 99.0
+    y: 95.0
+  }
+  type: TYPE_BOX
+  texture: "bar/button-bar-100"
+  id: "coffee-bar"
+  parent: "root"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+  enabled: false
+}
+nodes {
+  position {
+    x: 861.0
+    y: 95.0
+  }
+  type: TYPE_BOX
+  texture: "bar/button-bar-100"
+  id: "work-bar"
+  parent: "root"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+  enabled: false
+}
+nodes {
+  position {
+    x: 480.0
+    y: 280.0
+  }
+  scale {
+    x: 1.5
+    y: 1.5
+  }
+  type: TYPE_BOX
+  texture: "popup/popup-blue"
+  id: "popup"
+  parent: "root"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+  enabled: false
+}
+nodes {
+  size {
+    x: 380.0
+    y: 160.0
+  }
+  type: TYPE_TEXT
+  text: "(^-^)\n"
+  "\n"
+  "You worked too hard and got hurt. So, some the things are go left in the dark. It wasn\'t worth your health...\n"
+  "\n"
+  "BUT YOU WIN THIS ROUND!"
+  font: "Text"
+  id: "win-text"
+  line_break: true
+  parent: "popup"
+  inherit_alpha: true
+  enabled: false
+}
+nodes {
+  size {
+    x: 380.0
+    y: 160.0
+  }
+  type: TYPE_TEXT
+  text: "You weren\'t working enough energetically. Now the things are left in the dark. The world cares about your results, not your efforts...\n"
+  "\n"
+  "m(_ _)m"
+  font: "Text"
+  id: "lose-text"
+  line_break: true
+  parent: "popup"
+  inherit_alpha: true
+  enabled: false
+}
+nodes {
+  size {
+    x: 380.0
+    y: 160.0
+  }
+  type: TYPE_TEXT
+  text: "* Cafe 1 by Rylius -- https://freesound.org/s/165280/ -- License: Attribution 4.0\n"
+  "* SE-drink.mp3 by CaKon -- https://freesound.org/s/689289/ -- License: Attribution 4.0\n"
+  "* Lightning / Thunder Strike , rainless storm by csigusz_foxoup -- https://freesound.org/s/659389/ -- License: Attribution 4.0\n"
+  "* Heavy Rain on Sheet Metal by recordinghopkins -- https://freesound.org/s/174378/ -- License: Attribution 4.0\n"
+  "* Mischievous Laugh 2  by ryanconway -- https://freesound.org/s/239574/ -- License: Attribution 4.0\n"
+  "\n"
+  "Everything else: LazyMiB"
+  font: "Credits"
+  id: "credits-text"
+  line_break: true
+  parent: "popup"
+  inherit_alpha: true
+  enabled: false
+}
+nodes {
+  position {
+    x: 479.0
+    y: 43.0
+  }
+  type: TYPE_TEMPLATE
+  id: "credits"
+  parent: "root"
+  inherit_alpha: true
+  template: "/main/hud/regular-button.gui"
+}
+nodes {
+  type: TYPE_BOX
+  id: "credits/root"
+  parent: "credits"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_BOX
+  id: "credits/button"
+  parent: "credits/root"
+  template_node_child: true
+}
+nodes {
+  type: TYPE_TEXT
+  text: "Credits"
+  id: "credits/text"
+  parent: "credits/root"
+  overridden_fields: 8
+  template_node_child: true
+}
+nodes {
+  position {
+    x: 930.0
+    y: 544.0
+  }
+  size {
+    x: 180.0
+    y: 30.0
+  }
+  color {
+    x: 0.8
+    y: 0.8
+    z: 0.8
+  }
+  type: TYPE_TEXT
+  text: "Round: 0"
+  font: "TopHud"
+  id: "round"
+  pivot: PIVOT_E
+  parent: "root"
+  inherit_alpha: true
+}
+material: "/builtins/materials/gui.material"
+adjust_reference: ADJUST_REFERENCE_PARENT
